@@ -6,6 +6,7 @@ import '../components/gold_rate_chart.dart';
 import '../providers/analytics_provider.dart';
 import 'package:intl/intl.dart';
 import '../screens/detailed_orders_screen.dart';
+import '../constants/app_constants.dart';
 
 class AnalyticsScreen extends StatelessWidget {
   const AnalyticsScreen({Key? key}) : super(key: key);
@@ -23,42 +24,68 @@ class AnalyticsScreen extends StatelessWidget {
       backgroundColor: isDark ? Colors.grey[900] : Colors.grey[50],
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.transparent,
         title: Row(
           children: [
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: AppColors.primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(Icons.analytics, size: isPad ? 24.sp : 20.sp),
+              child: Icon(
+                Icons.analytics,
+                color: AppColors.primaryColor,
+                size: isPad ? 24.sp : 20.sp,
+              ),
             ),
             SizedBox(width: 12.w),
             Text(
               'Analytics Dashboard',
-              style: TextStyle(
-                fontSize: isPad ? 24.sp : 20.sp,
-                fontWeight: FontWeight.bold,
+              style: AppTextStyles.heading2().copyWith(
+                color: AppColors.primaryColor,
+                fontSize: isPad ? 20.sp : 18.sp,
               ),
             ),
           ],
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: Icon(Icons.calendar_today, size: isPad ? 24.sp : 20.sp),
-            onPressed: () {
-              _showDateRangePicker(context);
-            },
+          Container(
+            margin: EdgeInsets.only(right: 8.w),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.calendar_today,
+                size: isPad ? 24.sp : 20.sp,
+                color: AppColors.primaryColor,
+              ),
+              onPressed: () {
+                _showDateRangePicker(context);
+              },
+              tooltip: 'Select Date Range',
+            ),
           ),
-          IconButton(
-            icon: Icon(Icons.refresh, size: isPad ? 24.sp : 20.sp),
-            onPressed: () {
-              _refreshData(context);
-            },
+          Container(
+            margin: EdgeInsets.only(right: 16.w),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.refresh,
+                size: isPad ? 24.sp : 20.sp,
+                color: AppColors.primaryColor,
+              ),
+              onPressed: () {
+                _refreshData(context);
+              },
+              tooltip: 'Refresh Data',
+            ),
           ),
-          SizedBox(width: 8.w),
         ],
       ),
       body: Consumer<AnalyticsProvider>(

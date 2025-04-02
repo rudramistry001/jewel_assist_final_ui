@@ -7,6 +7,7 @@ import '../providers/analytics_provider.dart';
 import '../components/syncfusion_weekly_chart.dart';
 import '../models/jewelry_stats.dart';
 import '../models/click_data.dart';
+import './detailed_orders_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -54,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(width: 12.w),
                         Text(
                           'Jewel Assist',
-                          style: AppTextStyles.heading2.copyWith(
+                          style: AppTextStyles.heading2().copyWith(
                             color: AppColors.primaryColor,
                           ),
                         ),
@@ -87,7 +88,7 @@ class HomeScreen extends StatelessWidget {
                               gradient: LinearGradient(
                                 colors: [
                                   AppColors.primaryColor,
-                                  Color(0xFF6C5CE7),
+                                  AppColors.primaryColor.withOpacity(0.8),
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -109,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       'Welcome Back!',
-                                      style: AppTextStyles.heading2.copyWith(
+                                      style: AppTextStyles.heading2().copyWith(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -125,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                       child: Text(
                                         'Dashboard',
-                                        style: AppTextStyles.bodyText.copyWith(
+                                        style: AppTextStyles.bodyText().copyWith(
                                           color: Colors.white,
                                         ),
                                       ),
@@ -152,7 +153,7 @@ class HomeScreen extends StatelessWidget {
                           // KPI Cards
                           Text(
                             'Business Performance',
-                            style: AppTextStyles.heading2,
+                            style: AppTextStyles.heading2(),
                           ),
                           SizedBox(height: 12.h),
                           Wrap(
@@ -163,28 +164,28 @@ class HomeScreen extends StatelessWidget {
                                 'Monthly Growth',
                                 '${stats.monthlyGrowth.toStringAsFixed(1)}%',
                                 Icons.trending_up,
-                                stats.monthlyGrowth >= 0 ? Colors.green : Colors.red,
+                                stats.monthlyGrowth >= 0 ? AppColors.successColor : AppColors.errorColor,
                                 isPad,
                               ),
                               _buildKpiCard(
                                 'Completed Orders',
                                 '${stats.completedOrders}',
                                 Icons.check_circle,
-                                Colors.green,
+                                AppColors.successColor,
                                 isPad,
                               ),
                               _buildKpiCard(
                                 'In Progress',
                                 '${stats.ordersInProgress}',
                                 Icons.pending,
-                                Colors.orange,
+                                AppColors.primaryColor,
                                 isPad,
                               ),
                               _buildKpiCard(
                                 'Customer Rating',
                                 '${stats.averageRating.toStringAsFixed(1)}',
                                 Icons.star,
-                                Colors.amber,
+                                AppColors.primaryColor,
                                 isPad,
                               ),
                             ],
@@ -195,12 +196,12 @@ class HomeScreen extends StatelessWidget {
                           // Gold Rate Chart
                           Text(
                             'Gold Rate Trends',
-                            style: AppTextStyles.heading2,
+                            style: AppTextStyles.heading2(),
                           ),
                           SizedBox(height: 8.h),
                           Text(
                             'Last 7 days gold rate fluctuations',
-                            style: AppTextStyles.caption,
+                            style: AppTextStyles.caption(),
                           ),
                           SizedBox(height: 12.h),
                           Container(
@@ -225,7 +226,7 @@ class HomeScreen extends StatelessWidget {
                           // Category Revenue
                           Text(
                             'Revenue by Category',
-                            style: AppTextStyles.heading2,
+                            style: AppTextStyles.heading2(),
                           ),
                           SizedBox(height: 12.h),
                           Container(
@@ -254,13 +255,13 @@ class HomeScreen extends StatelessWidget {
                                         children: [
                                           Text(
                                             entry.key,
-                                            style: AppTextStyles.bodyText.copyWith(
+                                            style: AppTextStyles.bodyText().copyWith(
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                           Text(
                                             '\$${formatter.format(entry.value)} (${percentage}%)',
-                                            style: AppTextStyles.bodyText.copyWith(
+                                            style: AppTextStyles.bodyText().copyWith(
                                               fontWeight: FontWeight.w600,
                                               color: AppColors.primaryColor,
                                             ),
@@ -292,24 +293,21 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'Recent Orders',
-                                style: AppTextStyles.heading2,
+                                style: AppTextStyles.heading2(),
                               ),
                               TextButton(
                                 onPressed: () {
                                   // Navigate to detailed orders screen
-                                  final bottomNavBar = Provider.of<PageController>(
-                                    context, 
-                                    listen: false
-                                  );
-                                  bottomNavBar.animateToPage(
-                                    3, // Index of the Orders tab
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const DetailedOrdersScreen(),
+                                    ),
                                   );
                                 },
                                 child: Text(
                                   'View All',
-                                  style: AppTextStyles.bodyText.copyWith(
+                                  style: AppTextStyles.bodyText().copyWith(
                                     color: AppColors.primaryColor,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -356,14 +354,14 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   title: Text(
                                     'Order #${order.orderId}',
-                                    style: AppTextStyles.bodyText.copyWith(
+                                    style: AppTextStyles.bodyText().copyWith(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 14.sp,
                                     ),
                                   ),
                                   subtitle: Text(
                                     '${order.customerName} • ${DateFormat('MMM dd').format(order.date)}',
-                                    style: AppTextStyles.caption.copyWith(fontSize: 12.sp),
+                                    style: AppTextStyles.caption().copyWith(fontSize: 12.sp),
                                   ),
                                   trailing: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -371,7 +369,7 @@ class HomeScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         '\$${formatter.format(order.amount)}',
-                                        style: AppTextStyles.bodyText.copyWith(
+                                        style: AppTextStyles.bodyText().copyWith(
                                           fontWeight: FontWeight.w600,
                                           color: AppColors.primaryColor,
                                           fontSize: 14.sp,
@@ -382,16 +380,16 @@ class HomeScreen extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                                         decoration: BoxDecoration(
                                           color: order.status == 'Completed'
-                                              ? Colors.green.withOpacity(0.1)
-                                              : Colors.orange.withOpacity(0.1),
+                                              ? AppColors.successColor.withOpacity(0.1)
+                                              : AppColors.primaryColor.withOpacity(0.1),
                                           borderRadius: BorderRadius.circular(4.r),
                                         ),
                                         child: Text(
                                           order.status,
-                                          style: AppTextStyles.smallText.copyWith(
+                                          style: AppTextStyles.smallText().copyWith(
                                             color: order.status == 'Completed'
-                                                ? Colors.green
-                                                : Colors.orange,
+                                                ? AppColors.successColor
+                                                : AppColors.primaryColor,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 12.sp,
                                           ),
@@ -432,7 +430,7 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               value,
-              style: AppTextStyles.heading3.copyWith(
+              style: AppTextStyles.heading3().copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
@@ -440,7 +438,7 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 2.h),
             Text(
               label,
-              style: AppTextStyles.caption.copyWith(
+              style: AppTextStyles.caption().copyWith(
                 color: Colors.white.withOpacity(0.9),
               ),
             ),
@@ -452,7 +450,7 @@ class HomeScreen extends StatelessWidget {
   
   Widget _buildKpiCard(String title, String value, IconData icon, Color color, bool isPad) {
     return Container(
-      width: isPad ? 160.w : null,
+      width: isPad ? 160.w : 140.w,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
@@ -464,13 +462,16 @@ class HomeScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: color, size: isPad ? 20.sp : 16.sp),
+              Icon(icon, color: color, size: isPad ? 24.sp : 20.sp),
               SizedBox(width: 8.w),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: isPad ? 14.sp : 12.sp,
-                  color: Colors.grey[700],
+              Flexible(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: isPad ? 14.sp : 12.sp,
+                    color: AppColors.textPrimaryColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -504,15 +505,15 @@ class HomeScreen extends StatelessWidget {
   Color _getCategoryColor(String category) {
     switch (category.toLowerCase()) {
       case 'rings':
-        return Colors.blue;
+        return AppColors.primaryColor;
       case 'necklaces':
-        return Colors.purple;
+        return AppColors.secondaryColor;
       case 'earrings':
-        return Colors.pink;
+        return AppColors.tertiaryColor;
       case 'bracelets':
-        return Colors.teal;
+        return AppColors.primaryColor.withOpacity(0.8);
       case 'watches':
-        return Colors.amber;
+        return AppColors.secondaryColor.withOpacity(0.8);
       default:
         return AppColors.primaryColor;
     }
@@ -551,11 +552,14 @@ class HomeScreen extends StatelessWidget {
             children: [
               Icon(icon, color: color, size: isPad ? 24.sp : 20.sp),
               SizedBox(width: 8.w),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: isPad ? 14.sp : 12.sp,
-                  color: Colors.grey[700],
+              Flexible(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: isPad ? 14.sp : 12.sp,
+                    color: AppColors.textPrimaryColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

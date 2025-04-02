@@ -37,14 +37,14 @@ class StatsCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.caption.copyWith(
+            style: AppTextStyles.caption().copyWith(
               color: textColor ?? AppColors.textSecondaryColor,
             ),
           ),
           SizedBox(height: 8.h),
           Text(
             value,
-            style: AppTextStyles.heading1.copyWith(
+            style: AppTextStyles.heading1().copyWith(
               color: textColor ?? AppColors.textPrimaryColor,
               fontSize: 28.sp,
             ),

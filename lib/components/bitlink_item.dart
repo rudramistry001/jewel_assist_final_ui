@@ -37,19 +37,19 @@ class BitlinkItem extends StatelessWidget {
               children: [
                 Text(
                   bitlink.title,
-                  style: AppTextStyles.bodyText.copyWith(
+                  style: AppTextStyles.bodyText().copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   bitlink.url,
-                  style: AppTextStyles.smallText,
+                  style: AppTextStyles.smallText(),
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   bitlink.dateRange,
-                  style: AppTextStyles.smallText.copyWith(
+                  style: AppTextStyles.smallText().copyWith(
                     color: AppColors.textSecondaryColor.withOpacity(0.7),
                   ),
                 ),
@@ -62,12 +62,12 @@ class BitlinkItem extends StatelessWidget {
             children: [
               Text(
                 '${bitlink.clicks}',
-                style: AppTextStyles.heading3,
+                style: AppTextStyles.heading3(),
               ),
               SizedBox(height: 4.h),
               Text(
                 'clicks',
-                style: AppTextStyles.smallText,
+                style: AppTextStyles.smallText(),
               ),
             ],
           ),

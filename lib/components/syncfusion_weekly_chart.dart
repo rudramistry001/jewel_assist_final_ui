@@ -27,7 +27,7 @@ class _SyncfusionWeeklyChartState extends State<SyncfusionWeeklyChart> {
       enable: true,
       animationDuration: 150,
       color: AppColors.primaryColor,
-      textStyle: AppTextStyles.smallText.copyWith(
+      textStyle: AppTextStyles.smallText().copyWith(
         color: Colors.white,
       ),
     );
@@ -64,7 +64,7 @@ class _SyncfusionWeeklyChartState extends State<SyncfusionWeeklyChart> {
         plotAreaBorderWidth: 0,
         primaryXAxis: CategoryAxis(
           majorGridLines: const MajorGridLines(width: 0),
-          labelStyle: AppTextStyles.smallText.copyWith(
+          labelStyle: AppTextStyles.smallText().copyWith(
             color: AppColors.textSecondaryColor,
           ),
           axisLine: const AxisLine(width: 0),
@@ -74,7 +74,7 @@ class _SyncfusionWeeklyChartState extends State<SyncfusionWeeklyChart> {
             width: 0.5,
             color: AppColors.dividerColor.withOpacity(0.5),
           ),
-          labelStyle: AppTextStyles.smallText.copyWith(
+          labelStyle: AppTextStyles.smallText().copyWith(
             color: AppColors.textSecondaryColor,
           ),
           axisLine: const AxisLine(width: 0),

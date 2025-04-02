@@ -6,6 +6,7 @@ import '../providers/analytics_provider.dart';
 import 'package:intl/intl.dart';
 import '../widgets/edit_order_dialog.dart';
 import '../services/pdf_service.dart';
+import '../constants/app_constants.dart';
 
 class DetailedOrdersScreen extends StatelessWidget {
   const DetailedOrdersScreen({Key? key}) : super(key: key);
@@ -20,20 +21,45 @@ class DetailedOrdersScreen extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         elevation: 0,
-        title: Text(
-          'Order Details',
-          style: TextStyle(
-            fontSize: isPad ? 24.sp : 20.sp,
-            fontWeight: FontWeight.bold,
-          ),
+        backgroundColor: Colors.transparent,
+        title: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                Icons.list_alt,
+                color: AppColors.primaryColor,
+                size: isPad ? 24.sp : 20.sp,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Text(
+              'Order Details',
+              style: AppTextStyles.heading2().copyWith(
+                color: AppColors.primaryColor,
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list, size: isPad ? 24.sp : 20.sp),
+            icon: Icon(
+              Icons.filter_list,
+              size: isPad ? 24.sp : 20.sp,
+              color: AppColors.textPrimaryColor,
+            ),
             onPressed: () => _showFilterDialog(context),
           ),
           IconButton(
-            icon: Icon(Icons.search, size: isPad ? 24.sp : 20.sp),
+            icon: Icon(
+              Icons.search,
+              size: isPad ? 24.sp : 20.sp,
+              color: AppColors.textPrimaryColor,
+            ),
             onPressed: () => _showSearchDialog(context),
           ),
           SizedBox(width: 8.w),

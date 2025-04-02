@@ -99,7 +99,7 @@ class WeeklyClicksChart extends StatelessWidget {
       return const SizedBox.shrink();
     }
     
-    final style = AppTextStyles.smallText.copyWith(
+    final style = AppTextStyles.smallText().copyWith(
       color: AppColors.textSecondaryColor,
     );
     
@@ -113,7 +113,7 @@ class WeeklyClicksChart extends StatelessWidget {
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
-    final style = AppTextStyles.smallText.copyWith(
+    final style = AppTextStyles.smallText().copyWith(
       color: AppColors.textSecondaryColor,
     );
     

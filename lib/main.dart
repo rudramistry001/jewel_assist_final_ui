@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812), // Design size based on iPhone X
+      designSize: const Size(375, 812), // Base design size
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -31,8 +31,24 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4A90E2)),
               useMaterial3: true,
               scaffoldBackgroundColor: const Color(0xFFF5F8FA),
+              textTheme: Typography.englishLike2018.apply(
+                fontSizeFactor: 1.sp,
+                bodyColor: const Color(0xFF333333),
+                displayColor: const Color(0xFF333333),
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 12.h,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+              ),
             ),
-            home: child,
+            home: const MainNavigationScreen(),
           ),
         );
       },
