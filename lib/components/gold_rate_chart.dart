@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import '../models/jewelry_stats.dart';
 import 'package:intl/intl.dart';
 
@@ -16,15 +16,33 @@ class GoldRateChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPad = MediaQuery.of(context).size.width >= 768;
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    final formatter = NumberFormat("#,##0.00", "en_US");
+    if (rates.isEmpty) {
+      return Center(
+        child: Text(
+          'No data available',
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: Colors.grey[600],
+          ),
+        ),
+      );
+    }
 
-    // Calculate min and max rates for the Y-axis
-    final minRate = rates.map((e) => e.rate).reduce((a, b) => a < b ? a : b);
-    final maxRate = rates.map((e) => e.rate).reduce((a, b) => a > b ? a : b);
-    final rateRange = maxRate - minRate;
+    if (rates.length < 2) {
+      return Center(
+        child: Text(
+          'Insufficient data for chart',
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: Colors.grey[600],
+          ),
+        ),
+      );
+    }
+
+    final isPad = MediaQuery.of(context).size.width >= 768;
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final formatter = NumberFormat("#,##0.00", "en_US");
 
     // Calculate latest rate change
     final latestRate = rates.last;
@@ -96,121 +114,72 @@ class GoldRateChart extends StatelessWidget {
         // Chart
         SizedBox(
           height: isLandscape ? 200.h : 250.h,
-          child: LineChart(
-            LineChartData(
-              gridData: FlGridData(
-                show: true,
-                drawVerticalLine: true,
-                horizontalInterval: rateRange / 5,
-                verticalInterval: rates.length / 6,
+          child: SfCartesianChart(
+            plotAreaBorderWidth: 0,
+            primaryXAxis: CategoryAxis(
+              majorGridLines: const MajorGridLines(width: 0),
+              labelStyle: TextStyle(
+                color: Colors.grey[600],
+                fontSize: isPad ? 12.sp : 10.sp,
               ),
-              titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 50.w,
-                    getTitlesWidget: (value, meta) {
-                      return Text(
-                        '\$${formatter.format(value)}',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: isPad ? 12.sp : 10.sp,
-                        ),
-                      );
-                    },
-                    interval: rateRange / 5,
-                  ),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      if (value.toInt() >= 0 && value.toInt() < rates.length) {
-                        final date = rates[value.toInt()].date;
-                        String label;
-                        switch (timeRange) {
-                          case 'Weekly':
-                            label = DateFormat('EEE').format(date);
-                            break;
-                          case 'Monthly':
-                            label = DateFormat('dd/MM').format(date);
-                            break;
-                          case 'Quarterly':
-                            label = DateFormat('MMM').format(date);
-                            break;
-                          default:
-                            label = DateFormat('MMM').format(date);
-                        }
-                        return Padding(
-                          padding: EdgeInsets.only(top: 8.h),
-                          child: Text(
-                            label,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: isPad ? 12.sp : 10.sp,
-                            ),
-                          ),
-                        );
-                      }
-                      return const Text('');
-                    },
-                    reservedSize: 30.h,
-                    interval: rates.length / 6,
-                  ),
-                ),
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
+              axisLabelFormatter: (AxisLabelRenderDetails args) {
+                final index = int.tryParse(args.text ?? '0') ?? 0;
+                if (index >= 0 && index < rates.length) {
+                  final date = rates[index].date;
+                  switch (timeRange) {
+                    case 'Weekly':
+                      return ChartAxisLabel(DateFormat('EEE').format(date), null);
+                    case 'Monthly':
+                      return ChartAxisLabel(DateFormat('dd/MM').format(date), null);
+                    case 'Quarterly':
+                      return ChartAxisLabel(DateFormat('MMM').format(date), null);
+                    default:
+                      return ChartAxisLabel(DateFormat('MMM').format(date), null);
+                  }
+                }
+                return ChartAxisLabel('', null);
+              },
+            ),
+            primaryYAxis: NumericAxis(
+              numberFormat: NumberFormat.currency(symbol: '\$', decimalDigits: 2),
+              labelStyle: TextStyle(
+                color: Colors.grey[600],
+                fontSize: isPad ? 12.sp : 10.sp,
               ),
-              borderData: FlBorderData(show: true),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: rates.asMap().entries.map((entry) {
-                    return FlSpot(entry.key.toDouble(), entry.value.rate);
-                  }).toList(),
-                  isCurved: true,
-                  color: Theme.of(context).colorScheme.primary,
-                  barWidth: 2.w,
-                  dotData: FlDotData(
-                    show: true,
-                    getDotPainter: (spot, percent, barData, index) {
-                      return FlDotCirclePainter(
-                        radius: 3.r,
-                        color: Theme.of(context).colorScheme.primary,
-                        strokeWidth: 1.w,
-                        strokeColor: Colors.white,
-                      );
-                    },
-                  ),
-                  belowBarData: BarAreaData(
-                    show: true,
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  ),
-                ),
-              ],
-              lineTouchData: LineTouchData(
-                touchTooltipData: LineTouchTooltipData(
-                  tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
-                  getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                    return touchedSpots.map((LineBarSpot touchedSpot) {
-                      final date = rates[touchedSpot.x.toInt()].date;
-                      return LineTooltipItem(
-                        '${DateFormat('MMM dd, yyyy').format(date)}\n\$${formatter.format(touchedSpot.y)}',
-                        TextStyle(
-                          color: Colors.white,
-                          fontSize: isPad ? 14.sp : 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      );
-                    }).toList();
-                  },
-                ),
+              axisLine: const AxisLine(width: 0),
+              majorGridLines: MajorGridLines(
+                width: 0.5,
+                color: Colors.grey[300],
               ),
             ),
+            tooltipBehavior: TooltipBehavior(
+              enable: true,
+              format: 'point.x : \$point.y',
+              color: Colors.blueGrey.withOpacity(0.8),
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: isPad ? 14.sp : 12.sp,
+              ),
+            ),
+            series: <CartesianSeries<GoldRate, String>>[
+              SplineAreaSeries<GoldRate, String>(
+                dataSource: rates,
+                xValueMapper: (GoldRate rate, _) => 
+                    DateFormat('MMM dd').format(rate.date),
+                yValueMapper: (GoldRate rate, _) => rate.rate,
+                color: Theme.of(context).primaryColor.withOpacity(0.2),
+                borderColor: Theme.of(context).primaryColor,
+                borderWidth: 2,
+                markerSettings: MarkerSettings(
+                  isVisible: true,
+                  height: 6.r,
+                  width: 6.r,
+                  borderWidth: 2,
+                  borderColor: Theme.of(context).primaryColor,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       ],

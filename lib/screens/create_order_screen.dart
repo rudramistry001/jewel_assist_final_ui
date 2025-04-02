@@ -4,6 +4,8 @@ import 'dart:math'; // Import for generating random order ID
 import '../models/metal_type.dart';
 import '../models/ornament_type.dart';
 import '../constants/app_constants.dart';
+import '../models/order.dart';
+import '../screens/order_receipt_screen.dart';
 
 class CreateOrderScreen extends StatefulWidget {
   const CreateOrderScreen({Key? key}) : super(key: key);
@@ -139,6 +141,30 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
   }
 
   void _showConfirmationDialog(String orderId) {
+    final order = Order(
+      orderId: orderId,
+      customerName: _customerNameController.text,
+      phoneNumber: _phoneController.text,
+      orderDate: DateTime.now(),
+      metalType: _selectedMetal!.name,
+      weight: double.parse(_weightController.text),
+      ornamentType: _selectedOrnament!.name,
+      hasCustomDesign: _hasCustomDesign,
+      customDesign: _hasCustomDesign ? _customDesignController.text : null,
+      metalCost: _metalCost,
+      makingCharges: double.parse(_makingChargesController.text),
+      makingChargesAmount: _makingCharges,
+      customDesignCharges: _hasCustomDesign ? (_metalCost * 0.1) : null, // 10% of metal cost for custom design
+      cgst: double.parse(_cgstController.text),
+      sgst: double.parse(_sgstController.text),
+      cgstAmount: _cgst,
+      sgstAmount: _sgst,
+      additionalCharges: _additionalCharges,
+      discount: double.parse(_discountController.text.isEmpty ? "0" : _discountController.text),
+      discountAmount: _discount,
+      totalAmount: _totalAmount,
+    );
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -171,6 +197,12 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrderReceiptScreen(order: order),
+                  ),
+                );
               },
               child: Text('View Receipt'),
             ),

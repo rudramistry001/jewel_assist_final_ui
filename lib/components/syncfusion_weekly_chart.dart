@@ -62,12 +62,13 @@ class _SyncfusionWeeklyChartState extends State<SyncfusionWeeklyChart> {
       ),
       child: SfCartesianChart(
         plotAreaBorderWidth: 0,
+        margin: const EdgeInsets.all(0),
         primaryXAxis: CategoryAxis(
           majorGridLines: const MajorGridLines(width: 0),
           labelStyle: AppTextStyles.smallText().copyWith(
             color: AppColors.textSecondaryColor,
           ),
-          axisLine: const AxisLine(width: 0),
+          labelPlacement: LabelPlacement.onTicks,
         ),
         primaryYAxis: NumericAxis(
           majorGridLines: MajorGridLines(
@@ -82,7 +83,7 @@ class _SyncfusionWeeklyChartState extends State<SyncfusionWeeklyChart> {
         ),
         tooltipBehavior: _tooltipBehavior,
         zoomPanBehavior: _zoomPanBehavior,
-        series: <ChartSeries<DailyClickData, String>>[
+        series: <CartesianSeries>[
           // Area series for the background fill
           AreaSeries<DailyClickData, String>(
             dataSource: widget.weeklyData,
@@ -90,16 +91,7 @@ class _SyncfusionWeeklyChartState extends State<SyncfusionWeeklyChart> {
             yValueMapper: (DailyClickData data, _) => data.clicks,
             name: 'Clicks',
             borderWidth: 0,
-            gradient: LinearGradient(
-              colors: [
-                AppColors.primaryColor.withOpacity(0.3),
-                AppColors.primaryColor.withOpacity(0.05),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            animationDuration: 1500,
-            enableTooltip: false,
+            color: AppColors.primaryColor.withOpacity(0.3),
           ),
           // Line series for the main line
           SplineSeries<DailyClickData, String>(
@@ -111,18 +103,14 @@ class _SyncfusionWeeklyChartState extends State<SyncfusionWeeklyChart> {
             width: 3,
             markerSettings: MarkerSettings(
               isVisible: true,
-              height: 8,
-              width: 8,
-              shape: DataMarkerType.circle,
+              height: 8.r,
+              width: 8.r,
               borderWidth: 2,
               borderColor: AppColors.primaryColor,
               color: Colors.white,
             ),
-            animationDuration: 1500,
-            enableTooltip: true,
           ),
         ],
-        legend: Legend(isVisible: false),
       ),
     );
   }
